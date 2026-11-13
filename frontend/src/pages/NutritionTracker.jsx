@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, Plus, Trash2, Utensils, Flame, Beef, Wheat, Droplets } from "lucide-react";
 
-const API_URL = "http://localhost:5000/api/foods";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/foods`;
 
 function NutritionTracker() {
   const [foods, setFoods] = useState([]);

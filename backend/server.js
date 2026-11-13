@@ -4,9 +4,20 @@ require("dotenv").config();
 
 const connectDB = require("./config/db");
 
+const dietRoutes = require("./routes/dietRoutes");
+const foodRoutes = require("./routes/foodRoutes");
+const authRoutes = require("./routes/authRoutes");
+const aiRoutes = require("./routes/aiRoutes");
+
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        process.env.CLIENT_URL
+    ].filter(Boolean),
+    credentials: true
+}));
 
 app.use(express.json());
 
@@ -18,33 +29,26 @@ app.get("/", (req, res) => {
     });
 });
 
-// Start server and connect database
+// API routes
+app.use("/api/diet", dietRoutes);
+app.use("/api/foods", foodRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/ai", aiRoutes);
+
+// Start server
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-    await connectDB();
+    try {
+        await connectDB();
 
-    app.listen(PORT, () => {
-        console.log(`FitTrack AI server running on port ${PORT}`);
-    });
+        app.listen(PORT, () => {
+            console.log(`FitTrack AI server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Server startup failed:", error.message);
+        process.exit(1);
+    }
 };
 
 startServer();
-
-const dietRoutes = require("./routes/dietRoutes");
-
-app.use(express.json());
-
-app.use("/api/diet", dietRoutes);
-
-const foodRoutes = require("./routes/foodRoutes");
-
-app.use("/api/foods", foodRoutes);
-
-const authRoutes = require("./routes/authRoutes");
-
-app.use("/api/auth", authRoutes);
-
-const aiRoutes = require("./routes/aiRoutes");
-
-app.use("/api/ai", aiRoutes);

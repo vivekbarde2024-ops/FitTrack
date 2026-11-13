@@ -43,7 +43,7 @@ function DietPlanner() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/diet/calculate",
+  `${import.meta.env.VITE_API_URL}/api/diet/calculate`,
         {
           method: "POST",
           headers: {
